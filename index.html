@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mapbox A* Pathfinding</title>
+
+    <!-- Mapbox GL JS -->
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+
+      .input-container {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 1;
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="input-container">
+      <h3>Enter Source and Destination</h3>
+      <label for="source">Source (Lat,Lng): </label>
+      <input type="text" id="source" value="40.4883,-74.4464" /><br /><br />
+
+      <label for="destination">Destination (Lat,Lng): </label>
+      <input
+        type="text"
+        id="destination"
+        value="40.5000,-74.4600"
+      /><br /><br />
+
+      <button id="getPathBtn">Get Path</button>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Include the main JavaScript logic -->
+    <script src="main.js"></script>
+  </body>
+</html>
