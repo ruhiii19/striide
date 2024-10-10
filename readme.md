@@ -23,13 +23,6 @@ __Data:__
 
 __Algorithm: A*__
 
-__UI:__
-
-* Used [Google Maps API](https://developers.google.com/maps/documentation) to render the map. Also map is bounded by the co-ordinates using which OSM map data was generated.
-* You can click anywhere on the map. The first mouse event recorded will be treated as __Source__ and second will be __Destination__.
-* In order to generate output - click anywhere on the map. It will call the [API](https://github.com/vraj152/googlemapsastar/blob/63c0d686ee192ef10623a42097e52e07cf7f28ab/flaskAPI.py#L11) developed using Flask.
-* Path will be displayed by marker with "drop" animation.
-
 __Output:__
 
 * Due to larger number of nodes present in a map-snippet, A* becomes really slow. As it highly depends on branching factor : __O(b^d)__ 
