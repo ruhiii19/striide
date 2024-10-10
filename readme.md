@@ -1,11 +1,11 @@
-# Project: A* algorithm on google maps to find shortest path (googlemapsastar)
+
 __Data:__
 * Data has been extracted from [OSM](https://www.openstreetmap.org/).<br> 
 * It contains ~27k nodes and ~63k edges <br>
 * _Bounded by :- min: (40.4961000, -74.5015000); max: (40.5333000, -74.4143000)_ <br>
 * More on data:
   * Data provided by OSM is in __.osm__ format, which is nothing but the XML file. 
-  * Converted this file to lighter XML _(.graphml)_ file, which can be parsed easily as compared to .osm. [Code](https://github.com/vraj152/googlemapsastar/blob/63c0d686ee192ef10623a42097e52e07cf7f28ab/preprocessingGraph.py#L4) <br>
+  * Converted this file to lighter XML _(.graphml)_ file, which can be parsed easily as compared to .osm. [Code] <br>
   * Used OSMNX for this -> [OSMNX Documentation](https://osmnx.readthedocs.io/en/stable/osmnx.html#osmnx.core.graph_from_file) <br>
   * This .graphml file will be used for rest of the tasks. <br>
   * [convertJSON.py](https://github.com/vraj152/googlemapsastar/blob/63c0d686ee192ef10623a42097e52e07cf7f28ab/convertJSON.py) is helper class which contains all the methods which we will be needed to achieve the task. <br>
@@ -45,6 +45,4 @@ __Output:__
   <img src="output/OutputGoogleMaps.png" width="450" title="Google Maps Output">
 </p>
 
-* Time taken: ~9 seconds. Pretty Good. :bowtie:
-
-P.S. : Hit me up if you have any doubt.
+* Time taken: ~9 seconds. 
