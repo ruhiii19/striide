@@ -74,38 +74,29 @@ for feature in streetlight_data['features']:
 
 
 
+####################################################################################################
+
+#mapping streetlights to nearest sidewalk
+
 from shapely.geometry import Point, LineString
 
-def find_nearest_sidewalk_segment(streetlight, sidewalk_nodes, sidewalk_edges):
-    light_point = Point(streetlight['coordinates'])
-    
+# Function to find the nearest sidewalk segment for a given streetlight
+def nearest_sidewalk(light_point, G):
     nearest_edge = None
     min_distance = float('inf')
-
-    for edge in sidewalk_edges:
-        node1 = sidewalk_nodes[edge[0]]
-        node2 = sidewalk_nodes[edge[1]]
+    
+    for edge in G.edges(data=True):
+        node1 = G.nodes[edge[0]]['pos']  # Assuming 'pos' holds the (x, y) coordinates
+        node2 = G.nodes[edge[1]]['pos']
         sidewalk_segment = LineString([node1, node2])
-        
-        # Compute the distance between the streetlight and the sidewalk segment
+
         distance = light_point.distance(sidewalk_segment)
-        
         if distance < min_distance:
             min_distance = distance
             nearest_edge = edge
-
+    
     return nearest_edge, min_distance
 
-# Example usage:
-sidewalk_edges = [(node1_id, node2_id), ...]  # Define edges based on the OSM sidewalk data
 
-streetlight_map = {}
-for streetlight in streetlights:
-    nearest_edge, distance = find_nearest_sidewalk_segment(streetlight, sidewalk_nodes, sidewalk_edges)
-    
-    if nearest_edge:
-        if nearest_edge not in streetlight_map:
-            streetlight_map[nearest_edge] = []
-        streetlight_map[nearest_edge].append(streetlight)
 
 
