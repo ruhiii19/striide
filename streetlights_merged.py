@@ -1,4 +1,4 @@
-from pyproj import CRS, Transformer
+"""from pyproj import CRS, Transformer
 
 # Define the CRS
 crs_wgs84 = CRS.from_epsg(4326)  # WGS 84 (lat/lon)
@@ -95,7 +95,7 @@ def nearest_sidewalk(light_point, G):
             min_distance = distance
             nearest_edge = edge
     
-    return nearest_edge, min_distance
+    return nearest_edge, min_distance"""
 
 
 

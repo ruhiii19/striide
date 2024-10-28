@@ -3,12 +3,35 @@ from haversine import haversine
 import time
 import numpy as np
 from sklearn.neighbors import KDTree
+import logging
+import pyproj
+from pyproj import Proj, transform
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
 s = time.time()
 doc = {}
 with open('data/map.graphml') as fd:
     doc = xmltodict.parse(fd.read())
-print(time.time()-s)
+print(time.time() - s)
+
+from pyproj import Proj, transform
+
+def convert_from_utm(utm_x, utm_y):
+    # Calculate the UTM zone based on the longitude (utm_x)
+    utm_zone = int((utm_x + 180) / 6) + 1
+    if utm_zone < 1 or utm_zone > 60:
+        raise ValueError(f"Calculated UTM zone {utm_zone} is invalid.")
+    
+    # Define the UTM projection for the calculated zone
+    utm = Proj(proj='utm', zone=utm_zone, ellps='WGS84')
+    wgs84 = Proj(init='epsg:4326')  # WGS84
+
+    # Transform the coordinates
+    lon, lat = transform(utm, wgs84, utm_x, utm_y)  # Note the order is (x, y)
+    return lat, lon
+
 
 def getLatLon(OSMId):
     lat, lon = 0, 0

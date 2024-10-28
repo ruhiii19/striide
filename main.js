@@ -10,30 +10,48 @@ const map = new mapboxgl.Map({
   zoom: 13, // starting zoom
 });
 
-// Function to fetch the path data from Flask API and render it on Mapbox
 function getPathData(source, destination) {
+  console.log(
+    `Fetching path data for source: ${source}, destination: ${destination}`
+  );
   const url = `http://127.0.0.1:5000/calculate?pntdata=${source},${destination}`;
 
-  // Fetch the path from the Flask backend
+  console.log(`Sending request to: ${url}`);
   fetch(url)
-    .then((response) => response.json())
+    .then((response) => {
+      console.log("Received response from server");
+      return response.json();
+    })
     .then((data) => {
-      const coordinates = data.map((coord) => [coord.lng, coord.lat]); // Format the data for Mapbox
+      console.log("Parsed JSON data:", data);
+      const shortestPath = data.shortest_path;
+      const safestPath = data.safest_path;
 
-      // Remove the previous route if it exists
+      const shortestCoordinates = shortestPath.map((coord) => [
+        coord.lng,
+        coord.lat,
+      ]); // Format the data for Mapbox
+      const safeCoordinates = safestPath.map((coord) => [coord.lng, coord.lat]); // Format the data for Mapbox
+
+      // Remove the previous routes if they exist
       if (map.getSource("path")) {
         map.removeLayer("route");
         map.removeSource("path");
       }
 
-      // Add the new path to the map
+      if (map.getSource("safePath")) {
+        map.removeLayer("safeRoute");
+        map.removeSource("safePath");
+      }
+
+      // Add the new shortest path to the map
       map.addSource("path", {
         type: "geojson",
         data: {
           type: "Feature",
           geometry: {
             type: "LineString",
-            coordinates: coordinates,
+            coordinates: shortestCoordinates,
           },
         },
       });
@@ -47,26 +65,61 @@ function getPathData(source, destination) {
           "line-cap": "round",
         },
         paint: {
-          "line-color": "#3887be",
+          "line-color": "#3887be", // Color for shortest path
           "line-width": 5,
           "line-opacity": 0.75,
         },
       });
 
-      // Fit the map to the bounds of the path
-      const bounds = coordinates.reduce((bounds, coord) => {
-        return bounds.extend(coord);
-      }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+      // Add the new safest path to the map
+      map.addSource("safePath", {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: safeCoordinates,
+          },
+        },
+      });
+
+      map.addLayer({
+        id: "safeRoute",
+        type: "line",
+        source: "safePath",
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+        paint: {
+          "line-color": "#ff0000", // Color for safest path
+          "line-width": 5,
+          "line-opacity": 0.75,
+        },
+      });
+
+      // Fit the map to the bounds of both paths
+      const bounds = new mapboxgl.LngLatBounds();
+      shortestCoordinates.forEach((coord) => bounds.extend(coord));
+      safeCoordinates.forEach((coord) => bounds.extend(coord));
 
       map.fitBounds(bounds, { padding: 20 });
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error("Error fetching or processing data:", err);
+    });
 }
 
-// Event listener for the "Get Path" button
-document.getElementById("getPathBtn").addEventListener("click", () => {
-  const source = document.getElementById("source").value;
-  const destination = document.getElementById("destination").value;
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Page loaded");
 
-  getPathData(source, destination);
+  const getPathBtn = document.getElementById("getPathBtn");
+  getPathBtn.addEventListener("click", () => {
+    const source = document.getElementById("source").value;
+    const destination = document.getElementById("destination").value;
+    console.log(
+      `Button clicked: Source: ${source}, Destination: ${destination}`
+    );
+    getPathData(source, destination);
+  });
 });
